@@ -40,9 +40,3 @@ body {
     display: grid;
     place-items: center;
 }
-.spot-X {
-    color: #f87171;
-}
-.spot-O {
-    color: #60a5fa;
-}
