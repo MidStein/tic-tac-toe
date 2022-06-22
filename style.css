@@ -4,10 +4,16 @@ body {
     background-color: #e2e8f0;
 }
 
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
 .board-container {
     width: 95vh;
     height: 95vh;
     margin: 16px 16px 0 16px;
+    visibility: hidden;
 
     display: grid;
     grid-template-columns: 10fr 1fr 10fr 1fr 10fr;
@@ -39,4 +45,21 @@ body {
 
     display: grid;
     place-items: center;
+}
+
+.menu {
+    padding: 16px;
+
+    display: grid;
+    place-content: center left;
+}
+.menu > * {
+    padding: 8px;
+}
+.winner-congo {
+    font-size: 32px;
+    font-family: 'Lucida Handwriting';
+    color: #0ff;
+    background-color: #f0f;
+    visibility: hidden;
 }
