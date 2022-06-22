@@ -1,17 +1,34 @@
 const Gameboard = (function() {
     const boardArr = ['', '', '', '', '', '', '', '', ''];
-    // const getBoard = function() {
-    //     return [...boardArr];
-    // };
     const getBoardAtIndex = function(index) {
         return boardArr[index];
     }
     const setBoardAtIndex = function(index, mark) {
         boardArr[index] = mark;
     }
+    const check3InRow = function() {
+        for (key of [0, 3, 6]) {
+            if (boardArr[key] !== '' &&boardArr[key] === boardArr[key + 1] && boardArr[key + 1] === boardArr[key + 2]) 
+                return boardArr[key];
+        }
+        if (boardArr[2] !== '' && boardArr[2] === boardArr[4] && boardArr[4] === boardArr[6]) 
+            return boardArr[2];
+        for (key of [0, 1, 2]) {
+            if (boardArr[key] !== '' && boardArr[key] === boardArr[key + 3] && boardArr[key + 3] === boardArr[key + 6]) 
+                return boardArr[key];
+        }
+        if (boardArr[0] !== '' && boardArr[0] === boardArr[4] && boardArr[4] === boardArr[8]) 
+            return boardArr[0];
+        return null;        
+    }
+    const checkDraw =  function() {
+        return !boardArr.includes('');
+    };
     return {
         getBoardAtIndex,
-        setBoardAtIndex
+        setBoardAtIndex,
+        check3InRow,
+        checkDraw
     };
 })();
 const Player = function(plName, plMark) {
@@ -28,6 +45,13 @@ const Player = function(plName, plMark) {
 };
 const DisplayController = (function() {
     let spots, turn = 0;
+    const getNameFromMark = function(mark) {
+        for (let i = 0; i < player.length; i++) {
+            if (player[i].getPlMark() == mark) {
+                return player[i].getPlName();
+            }
+        }
+    }
     const playerClicked = function() {
         if (Gameboard.getBoardAtIndex(this.getAttribute('data-key')) !== '') return;
         if (turn % 2 === 0) {
@@ -39,6 +63,14 @@ const DisplayController = (function() {
             this.textContent = 'O';
             Gameboard.setBoardAtIndex(this.getAttribute('data-key'), 'O');
         }
+        if (turn >= 4) {
+            const is3InRow = Gameboard.check3InRow();
+            if (is3InRow) {
+                console.log(`${getNameFromMark(is3InRow)} wins.`);;
+            } else if (Gameboard.checkDraw()) {
+                console.log('draw');
+            }
+        }
         turn++;
     };
     const renderBoard = function(board) {
@@ -47,13 +79,6 @@ const DisplayController = (function() {
             let spot = document.createElement('div');
             spot.setAttribute('data-key', i);
             spot.className = 'spot';
-            // if (board[i] === 'X') {
-            //     spot.style.color = '#f87171';
-            //     spot.textContent = 'X';
-            // } else if(board[i] === 'O') {
-            //     spot.style.color = '#60a5fa';
-            //     spot.textContent = 'O';
-            // }
             boardContainer.appendChild(spot);
         }
         spots = document.querySelectorAll('.spot');
@@ -63,6 +88,5 @@ const DisplayController = (function() {
         renderBoard
     };
 })();
-const player1 = Player('Felix', 'X');
-const player2 = Player('Sean', 'O');
+const player = [Player('Felix', 'X'), Player('Sean', 'O')];
 DisplayController.renderBoard([]);
